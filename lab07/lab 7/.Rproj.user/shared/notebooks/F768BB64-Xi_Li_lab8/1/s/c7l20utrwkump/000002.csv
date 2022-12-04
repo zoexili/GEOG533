@@ -1,5 +1,0 @@
-"0","df <- read.csv(""http://spatial.binghamton.edu/geog533/data/Milwaukee_Sales.csv"")
-"
-"2","InternetOpenUrl failed: 'The server name or address could not be resolved'"
-"2","Error in file(file, ""rt"") : cannot open the connection
-"
