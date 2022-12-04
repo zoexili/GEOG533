@@ -1,0 +1,7 @@
+"0","```r
+curve(dnorm(x,mean = 250, sd = 80),from = 10,to = 490)
+cord.x <- c(200,seq(200,300,0.01),300)
+cord.y <- c(0,dnorm(seq(200,300,0.01),250,80),0)
+polygon(cord.x,cord.y,col='red')
+
+```"

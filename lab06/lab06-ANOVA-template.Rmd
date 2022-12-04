@@ -1,0 +1,285 @@
+---
+title: "Geog533 Lab 6 - ANOVA"
+author: "Li Xi"
+output:
+  html_document:
+    toc: yes
+  html_notebook:
+    toc: yes
+    toc_float: yes
+---
+
+Complete the following exercises in Chapter 6 (Analysis of Variance) of the textbook pages 199-203. For each question, you need to specify the null hypothesis and why you accept or reject the null hypothesis.
+
+
+## Question 1
+This is Exercise 2 in Chapter 6 of the Textbook [R].
+
+### Problem
+Assume that an analysis of variance is conducted for a study where there are $N = 50$ observations and $k = 5$ categories. Fill in the blanks in the following ANOVA table:
+
+|          | Sum of squares  | Degrees of freedom |  Mean square   |       *F*       |
+|----------|-----------------|--------------------|----------------|-----------------|
+| Between  |                 |                    |      116.3     |                 |
+| Within   |       2000      |                    |                |                 |
+| Total    |                 |                    |                |                 |
+
+
+### Solution
+```{r}
+N <- 50
+k <- 5
+## define the variables here, and use the imbedded r code like `r variable` to fill in the blanks.  
+df1 <- k-1
+df2 <- N-k
+f_crit <- qf(0.95,df1,df2)
+f_value <- 116.3/(2000/(N-k))
+if (f_value>f_crit){
+  print("we reject the null hypothesis")
+}else{
+  print("we cannot reject the null hypothesis")
+}
+```
+
+|          | Sum of squares     | Degrees of freedom |  Mean square     |       *F*       |
+|----------|--------------------|--------------------|------------------|-----------------|
+| Between  |`r 116.3*(k-1)`     |        `r k-1`     |      116.3       |`r 116.3/(2000/(N-k))`|
+| Within   |       2000         |        `r N-k`     |`r 2000/(N-k)`    |                 |
+| Total    |`r 116.3*(k-1)+2000`| `r N-1`            |                  |                 |
+
+
+
+
+## Question 2
+This is Exercise 6 in Chapter 6 of the Textbook [R].
+
+### Problem 
+Is there a significant difference between the distances moved by low- and high-income individuals? Twelve respondents in each of the income categories are interviewed, with the following results for the distances associated with residential moves:
+
+| Respondent  | Low income  | High income |
+|-------------|-------------|-------------|
+|     1       |      5      |     25      |
+|     2       |      7      |     24      |
+|     3       |      9      |     8       |
+|     4       |      11     |     2       |
+|     5       |      13     |     11      |
+|     6       |      8      |     10      |
+|     7       |      10     |     10      |
+|     8       |      34     |     66      |
+|     9       |      17     |     113     |
+|     10      |      50     |     1       |
+|     11      |      17     |     3       |
+|     12      |      25     |     5       |
+|     Mean    |      17.17  |     23.17   |
+|  Std. dev.  |      13.25  |     33.45   |
+
+
+Test the null hypothesis of homogeneity of variances by forming the ratio $s_1^2 / s_2^2$ which has an F-ratio with $n_1 – 1$ and $n_2 – 1$ degrees of freedom. Then use ANOVA (with $\alpha = 0.10$) to test whether there are differences in the two population means. Set up the null and alternative hypotheses, choose a value of α and a test statistic, and test the null hypothesis. What assumption of the test is likely not satisfied?
+
+### Solution
+```{r}
+low_income <- c(5,7,9,11,13,8,10,34,17,50,17,25)
+high_income <- c(25,24,8,2,11,10,10,66,113,1,3,5)
+group <- c(rep("low income",12),rep("high income",12))
+distance <- c(low_income,high_income)
+DF <- data.frame(distance,group)
+```
+
+### levene test
+```{r}
+library(car)
+leveneTest(distance~group,data=DF)
+f_crit <- qf(0.95,df1=1,df2=22)
+f_value <- 1.02
+if(f_value>f_crit){
+  print("we reject the null hypothesis, the homogeneity of variances is not met")
+} else{
+  print("we cannot reject the null hypothesis, the homogeneity of variance is met")
+}
+```
+
+### F test
+```{r}
+result <- aov(distance~group,data=DF)
+summary(result)
+f_value <- 0.334
+f_crit2 <- qf(0.90,df=1,df2=22)
+if (f_value>f_crit){
+  print("we reject the null hypothesis")
+} else{
+  print("we cannot reject the null hypothesis")
+}
+```
+
+
+## Question 3
+This is Exercise 9 in Chapter 6 of the Textbook [R].
+
+### Problem
+A sample is taken of incomes in three neighborhoods, yielding the following data: 
+
+|          |        A        |          B         |       C        | Overall (Combined sample) |
+|----------|-----------------|--------------------|----------------|---------------------------|
+| N        |        12       |          10        |        8       |             30            |
+| Mean     |       43.2      |          34.3      |        27.2    |             35.97         |
+| Std. dev.|       36.2      |          20.3      |        21.4    |             29.2          |
+
+
+Use analysis of variance (with α = 0.05) to test the null hypothesis that the means are equal.
+
+
+### Solution
+```{r}
+N <- 30
+s <- 29.2
+total_sum <- (N-1)*s^2
+N.A <- 12
+N.B <- 10
+N.C <- 8
+s.A <- 36.2
+s.B <- 20.3
+s.C <- 21.4
+within_sum <- (N.A-1)*s.A^2 + (N.B-1)*s.B^2 + (N.C-1)*s.C^2
+between_sum <- total_sum - within_sum
+df1 <- 3-1
+df2 <- N-3
+f_value <- (between_sum/df1)/(within_sum/df2)
+f_crit <- qf(0.95,df1,df2)
+if(f_value>f_crit){
+  print("we reject the null hypothesis")
+} else{
+  print("we canot reject the null hypothesis")
+}
+```
+
+
+
+## Question 4
+This is Exercise 10 in Chapter 6 of the Textbook [R].
+
+### Problem
+Use the Kruskal–Wallis test (with α = 0.05) to determine whether you should reject the null hypothesis that the means of the four columns of data are equal:
+
+|   Col 1  |       Col 2     |        Col 3       |       Col 4    |
+|----------|-----------------|--------------------|----------------|
+|   23.1   |       43.1      |        56.5        |       10002.3  |
+|   13.3   |       10.2      |        32.1        |       54.4     |
+|   15.6   |       16.2      |        43.3        |       8.7      |
+|   1.2    |       0.2       |        24.4        |       54.4     |
+
+
+### Solution
+```{r}
+library(graphics)
+col.1 <- c(23.1,13.3,15.6,1.2)
+col.2 <- c(43.1,10.2,16.2,0.2)
+col.3 <- c(56.5,32.1,43.3,24.4)
+col.4 <- c(10002.3,54.4,8.7,54.4)
+col <- c(col.1,col.2,col.3,col.4)
+group <- c(rep("col 1",4),rep("col 2",4),rep("col 3",4),rep("col 4",4))
+DF <- data.frame(col,group)
+result <- kruskal.test(col~group,data=DF)
+if (result$p.value<=0.05){
+  print("we reject the null hypothesis")
+} else{
+  print("we cannot reject the null hypothesis")
+}
+```
+
+
+## Question 5
+This is Exercise 12 in Chapter 6 of the Textbook [R].
+
+### Problem
+A researcher wishes to know whether distance traveled to work varies by income. Eleven individuals in each of three income groups are surveyed. The resulting data are as follows (in commuting miles, one-way):
+
+```{r}
+## This is the script to generate the table. Do not write your answer inside in this block.
+Observations <- seq(1:11)
+Low <- c(5,4,1,2,3,10,6,6,4,12,11)
+Medium <- c(10,10,8,6,5,3,16,20,7,3,2)
+High <- c(8,11,15,19,21,7,7,4,3,17,18)
+
+df <- data.frame(Observations,Low,Medium,High)
+library(knitr)
+kable(df)
+```
+
+Use analysis of variance (with α = 0.05) to test the hypothesis that commuting distances do not vary by income. Also evaluate (using R and the Levene test) the assumption of homoscedasticity. Finally, lump all of the data together and produce a histogram, and comment on whether the assumption of normality appears to be satisfied.
+
+
+### Solution
+```{r}
+library(car)
+Low <- c(5,4,1,2,3,10,6,6,4,12,11)
+Medium <- c(10,10,8,6,5,3,16,20,7,3,2)
+High <- c(8,11,15,19,21,7,7,4,3,17,18)
+income <- c(Low,Medium,High)
+group <- c(rep("Low",11),rep("Medium",11),rep("High",11))
+DF <- data.frame(income,group)
+result <- leveneTest(income~group,data = DF)
+f_crit <- qf(0.95,df1=2,df2=30)
+f_value <- 2.17
+if(f_crit<f_value){
+  print("we reject the null hypothesis")
+} else{
+  print("we cannot reject the null hypothesis: The assumption of homoscedasticity is met.")
+}
+```
+### Since the asummption of homoscedasticity is met, we should use F test
+```{r}
+m <- aov(income~group,data=DF)
+m
+summary(m)
+f_value <- 3.49
+f_crit <- qf(0.95,df1=2,df2=30)
+if (f_value>f_crit){
+  print("we reject the null hypothesis -> Distance travelled to work varies by income")
+} else{
+  print("we cannot reject the null hypothesis")
+}
+```
+
+### Test Normality
+```{r}
+result <- shapiro.test(income)
+if (result$p.value<=0.05){
+  print("we reject the null hypothesis, the assumption of normality is not met")
+} else{
+  print("we cannot reject the null hypothesis")
+}
+```
+
+## Question 6
+This is Exercise 13 in Chapter 6 of the Textbook [R].
+
+### Problem
+Data are collected on automobile ownership by surveying residents in central cities, suburbs and rural areas. The results are:
+
+|                      | Central cities  |      Suburbs       |  Rural areas   |
+|----------------------|-----------------|--------------------|----------------|
+|Number of observations|      10         |        15          |       15       |
+|      mean            |      1.5        |        2.6         |       1.2      |
+|      Std. dev        |      1.0        |        1.1         |       1.2      |  
+|Overall mean: 1.725   |                 |                    |                |  
+|Overall std.dev: 1.2  |                 |                    |                |   
+
+
+Test the null hypothesis that the means are equal in all three areas.
+
+### Solution
+```{r}
+total.sum <- (10+15+15-1)*1.2^2
+within <- (10-1)*1^2 + (15-1)*1.1^2 + (15-1)*1.2^2
+Between <- total.sum-within
+df1 <- 3-1
+df2 <- 40-3
+F_value <- (Between/df1)/(within/df2)
+F_crit <- qf(0.95,df1=2,df2=37)
+if(F_value>F_crit){
+  print("we reject the null hypothesis")
+} else{
+  print("we cannot reject the null hypothesis")
+}
+```
+

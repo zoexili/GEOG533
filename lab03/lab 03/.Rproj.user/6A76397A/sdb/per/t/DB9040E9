@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"lab03\"\nauthor: \"Li\"\ndate: \"October 1, 2017\"\noutput: \n  html_notebook:\n    toc: TRUE\n    toc_float: TRUE\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n```{r include = FALSE}\nlibrary(MASS)\n```\n\nThe code below is lab3.\n\n## Question 1\n```{r sample}\ndf <- Cars93\nind <- sample(1:nrow(df),size=40)\n```\n\n#### split data\n```{r split}\ntrain <- df[ind,]\ntest <- df[-ind,]\n```\n\n#### write into csv files\n```{r csv}\nwrite.csv(train,\"training_set\",row.names=FALSE)\nwrite.csv(test,\"testing_set\",row.names=FALSE)\n```\n\n#### number of USA cars and Non-USA cars\n```{r USA}\nt_USA <- which(train$Origin==\"USA\")\nt_nonUSA <- which(train$Origin==\"non-USA\")\nas.data.frame(t_USA) \nas.data.frame(t_nonUSA)\n```\n\n## Question 2\n#### 5 girls and 5 boys coming out from 10 births\n```{r boy}\nset.seed(121)\nsample(c(\"boy\",\"girl\"),size = 10,replace = TRUE,prob = c(0.515,0.485))\n```\n\n#### 5222 boys and 4778 girls\n```{r girl}\nset.seed(222)\nx <- sample(c(\"boy\",\"girl\"),size = 10000,replace = TRUE,prob = c(0.515,0.485))\nsample(x[x==\"boy\"]) \nsample(x[x==\"girl\"])\n```\n\n## Question 3\n#### 3 boys out of 10 births\n```{r dbinom}\ndbinom(3,size=10,prob=0.515)\n```\n\n#### density function plot\n```{r dbinom1}\nn <- 10\nx <- 0:n\ny <- dbinom(x,size=n,prob=0.515)\nplot(x,y,type=\"b\",pch=16,col=\"black\")\n```\n\n#### 8 or more boys out of 10 births\n```{r dbinom2}\ndbinom(8,10,prob=0.515) + dbinom(9,10,prob=0.515) + dbinom(10,10,prob=0.515)\npbinom(7,10,prob=0.515,lower.tail = FALSE)\n```\n\n#### cumulative probability function plot\n```{r plot}\nn <- 10\nx <- 0:n\ny1 <- pbinom(x,size=n,prob=0.515)\nplot(x,y1,type=\"b\",pch=14,col=\"red\")\n```\n\n## Question 4\n#### 4 cars every 10 seconds & >5 cars every 10 seconds\n```{r dpois}\ndpois(4,lambda=5)\nppois(5,lambda=5,lower.tail = FALSE)\n```\n\n#### plot\n```{r pplot}\nn <- 20\nx <- 0:n\ny <- dpois(x,lambda=5)\nplot(x,y,type=\"b\",pch=15,col=\"blue\")\n```\n",
+    "created" : 1506948180303.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1482786157",
+    "id" : "DB9040E9",
+    "lastKnownWriteTime" : 1506948457,
+    "last_content_update" : 1506948457023,
+    "path" : "C:/Users/Li/Desktop/Introduction to statistical methods for geography/labs/lab03/lab 03/lab 03.rmd",
+    "project_path" : "lab 03.rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

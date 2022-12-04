@@ -1,0 +1,6 @@
+"0","```r
+n <- 100
+x <- 1:n
+y <- dpois(x,lambda=30)
+plot(x,y,type=\"b\",pch=16,col='skyblue')
+```"

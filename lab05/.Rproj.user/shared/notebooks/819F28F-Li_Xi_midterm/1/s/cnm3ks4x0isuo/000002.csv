@@ -1,0 +1,8 @@
+"0","```r
+table(train$Species==\"setosa\")
+table(train$Species==\"versicolor\")
+table(train$Species==\"virginica\")
+table(test$Species==\"setosa\")
+table(test$Species==\"versicolor\")
+table(test$Species==\"virginica\")
+```"

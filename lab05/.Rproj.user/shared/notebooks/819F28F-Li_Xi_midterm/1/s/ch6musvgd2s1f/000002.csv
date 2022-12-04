@@ -1,0 +1,7 @@
+"0","```r
+n <- 100
+x <- 1:n
+y <- dbinom(x,100,0.505)
+plot(x,y,type=\"b\",pch=16,col='red')
+
+```"

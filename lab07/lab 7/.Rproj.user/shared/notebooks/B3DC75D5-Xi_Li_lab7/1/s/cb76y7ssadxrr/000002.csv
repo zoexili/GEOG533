@@ -1,0 +1,12 @@
+"0","result <- cor.test(df$speed,df$dist,method=""pearson"")
+### the result from cor.test is the same as the result from part c.
+if (result$p.value<=0.05){
+  print('we reject the null hypothesis')
+} else{
+  print(""we cannot reject the null hypothesis"")
+}
+"
+"1","[1]"
+"1"," ""we reject the null hypothesis"""
+"1","
+"

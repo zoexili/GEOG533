@@ -1,0 +1,11 @@
+"0","result <- cor.test(df$x,df$y,alternative='less',method=""pearson"")
+if(result$p.value<=0.05){
+  print(""we reject the null hypothesis"")
+} else{
+  print(""we cannot reject the null hypothesis"")
+}
+"
+"1","[1]"
+"1"," ""we reject the null hypothesis"""
+"1","
+"
